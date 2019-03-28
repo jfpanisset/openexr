@@ -6,13 +6,43 @@
 trigger:
 - master
 
+strategy:
+  matrix:
+    linux:
+      imageName: 'ubuntu-16.04'
+    mac:
+      imageName: 'macos-10.13'
+    windows:
+      imageName: 'vs2017-win2016'
+
 pool:
-  vmImage: 'Ubuntu-16.04'
+  vmImage: $(imageName)
+  
 
 steps:
-- script: |
+# Linux
+- bash: |
     cd IlmBase
     ./bootstrap
     ./configure
     make
-  displayName: 'make'
+  condition: eq( variables['Agent.OS'], 'Linux' )
+  displayName: Build IlmBase on Linux
+# macOS
+- bash: |
+    cd IlmBase
+    ./bootstrap
+    ./configure
+    make
+  condition: eq( variables['Agent.OS'], 'Darwin' )
+  displayName: Build IlmBase on macOS
+# Windows
+- powershell: |
+    Remove-Item -Force CMakeCache.txt
+    Start-Process -FilePath cmake -ArgumentList "-G `"Visual Studio 15 2017 Win64`""
+  condition: eq( variables['Agent.OS'], 'Windows_NT' )
+  displayName: Build IlmBase on Windows
+
+# On all platforms
+- script: |
+    echo We built IlmBase
