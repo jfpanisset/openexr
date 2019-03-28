@@ -38,6 +38,7 @@ steps:
   displayName: Build IlmBase on macOS
 # Windows
 - powershell: |
+    Set-Location -Path IlmBase
     Remove-Item -Force CMakeCache.txt
     Start-Process -FilePath cmake -ArgumentList "-G `"Visual Studio 15 2017 Win64`""
   condition: eq( variables['Agent.OS'], 'Windows_NT' )
