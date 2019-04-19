@@ -3,6 +3,10 @@
 # Add steps that publish test results, save build artifacts, deploy, and more:
 # https://docs.microsoft.com/azure/devops/pipelines/apps/c-cpp/gcc
 
+- task: SonarCloudPrepare@1
+  inputs:
+    scannerMode: 'CLI'
+
 trigger:
 - master
 
