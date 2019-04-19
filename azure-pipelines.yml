@@ -23,8 +23,11 @@ pool:
 steps:
 # Linux
 - task: SonarCloudPrepare@1
-  inputs:
-    scannerMode: 'CLI'
+    inputs:
+        SonarCloud: 'fc625b8f-ccd1-4739-8296-af200d3aac70'
+        organization: 'jfpanisset-github'
+        projectKey: 'jfpanisset_openexr'
+        projectName: 'openexr'
 - bash: |
     cd IlmBase
     ./bootstrap
