@@ -7,52 +7,61 @@
 trigger:
 - master
 
-strategy:
-  matrix:
-    linux:
-      imageName: 'ubuntu-16.04'
-    mac:
-      imageName: 'macos-10.14'
-    windows:
-      imageName: 'vs2017-win2016'
+jobs:
+- job: Linux
+  pool:
+    vmImage: 'ubuntu-16.04'
+  steps:
+  - script: echo hello from Linux
+  - task: SonarCloudPrepare@1
+    inputs:
+      SonarCloud: 'fc625b8f-ccd1-4739-8296-af200d3aac70'
+      organization: 'jfpanisset-github'
+      scannerMode: 'CLI'
+      configMode: 'manual'
+      cliProjectKey: 'jfpanisset_openexr'
+      cliProjectName: 'openexr'
+  - bash: |
+      cmake -DCMAKE_INSTALL_PREFIX=/usr/local . -G "Unix Makefiles" -DCMAKE_PREFIX_PATH=/usr/local
+      make
+    displayName: Run cmake and build OpenEXR on Linux
 
-pool:
-  vmImage: $(imageName)
-  
+- job: macOS
+  pool:
+    vmImage: 'macOS-10.14'
+  steps:
+  - script: echo hello from macOS
+  - task: SonarCloudPrepare@1
+    inputs:
+      SonarCloud: 'fc625b8f-ccd1-4739-8296-af200d3aac70'
+      organization: 'jfpanisset-github'
+      scannerMode: 'CLI'
+      configMode: 'manual'
+      cliProjectKey: 'jfpanisset_openexr'
+      cliProjectName: 'openexr'
+  - bash: |
+      cmake -DCMAKE_INSTALL_PREFIX=/usr/local . -G "Unix Makefiles" -DCMAKE_PREFIX_PATH=/usr/local
+      make
+    displayName: Run cmake and build OpenEXR on macOS
+   
+- job: Windows
+  pool:
+    vmImage: 'vs2017-win2016'
+  steps:
+  - script: echo hello from Windows
+  - task: SonarCloudPrepare@1
+    inputs:
+      SonarCloud: 'fc625b8f-ccd1-4739-8296-af200d3aac70'
+      organization: 'jfpanisset-github'
+      scannerMode: 'CLI'
+      configMode: 'manual'
+      cliProjectKey: 'jfpanisset_openexr'
+      cliProjectName: 'openexr'
+  - powershell: |
+      Remove-Item -Force -ErrorAction Ignore CMakeCache.txt
+      Start-Process -FilePath cmake -ArgumentList "-G `"Visual Studio 15 2017 Win64`""
+    displayName: Run cmake on Windows
+  - task: MSBuild@1
+    solution: '*.sln'
+    displayName: Build OpenEXR on Windows
 
-steps:
-# Linux
-- task: SonarCloudPrepare@1
-  inputs:
-    SonarCloud: 'fc625b8f-ccd1-4739-8296-af200d3aac70'
-    organization: 'jfpanisset-github'
-    scannerMode: 'CLI'
-    configMode: 'manual'
-    cliProjectKey: 'jfpanisset_openexr'
-    cliProjectName: 'openexr'
-- bash: |
-    cd IlmBase
-    ./bootstrap
-    ./configure
-    make
-  condition: eq( variables['Agent.OS'], 'Linux' )
-  displayName: Build IlmBase on Linux
-# macOS
-- bash: |
-    cd IlmBase
-    ./bootstrap
-    ./configure
-    make
-  condition: eq( variables['Agent.OS'], 'Darwin' )
-  displayName: Build IlmBase on macOS
-# Windows
-- powershell: |
-    Set-Location -Path IlmBase
-    Remove-Item -Force -ErrorAction Ignore CMakeCache.txt
-    Start-Process -FilePath cmake -ArgumentList "-G `"Visual Studio 15 2017 Win64`""
-  condition: eq( variables['Agent.OS'], 'Windows_NT' )
-  displayName: Build IlmBase on Windows
-
-# On all platforms
-- script: |
-    echo We built IlmBase
