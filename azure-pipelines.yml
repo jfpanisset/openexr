@@ -22,6 +22,10 @@ jobs:
       cliProjectKey: 'jfpanisset_openexr'
       cliProjectName: 'openexr'
   - bash: |
+      curl -O https://sonarcloud.io/static/cpp/build-wrapper-linux-x86.zip
+      unzip build-wrapper-linux-x86.zip
+    displayName: Download Sonar build wrapper
+  - bash: |
       sudo apt update && sudo apt install libboost-all-dev libboost-python-dev
     displayName: Install Boost and Boost.Python on Linux
   - task: CMake@1
@@ -30,7 +34,7 @@ jobs:
       cmakeArgs: '-DCMAKE_INSTALL_PREFIX=/usr/local . -G "Unix Makefiles" -DCMAKE_PREFIX_PATH=/usr/local'
     displayName: Generate Makefiles with Cmake on Linux
   - bash: |
-      build-wrapper-linux-x86-64 --out-dir bw-output make clean all
+      build-wrapper-linux-x86-64/build-wrapper-linux-x86-64 --out-dir bw-output make clean all
     displayName: Build OpenEXR on Linux with SonarCloud build wrapper
 
 - job: macOS
@@ -46,6 +50,10 @@ jobs:
       configMode: 'manual'
       cliProjectKey: 'jfpanisset_openexr'
       cliProjectName: 'openexr'
+  - bash: |
+      curl -O https://sonarcloud.io/static/cpp/build-wrapper-macosx-x86.zip
+      unzip build-wrapper-macosx-x86.zip
+    displayName: Download Sonar build wrapper
   # FIXME: do we need --with-python for boost install?
   - bash: |
       brew update
@@ -58,7 +66,7 @@ jobs:
       cmakeArgs: '-DCMAKE_INSTALL_PREFIX=/usr/local . -G "Unix Makefiles" -DCMAKE_PREFIX_PATH=/usr/local'
     displayName: Generate Makefiles with Cmake on macOS    
   - bash: |
-      build-wrapper-macosx-x86 --out-dir bw-output make clean all
+      build-wrapper-macosx-x86/build-wrapper-macosx-x86 --out-dir bw-output make clean all
     displayName: Build OpenEXR on macOS with SonarCloud build wrapper
    
 - job: Windows
@@ -74,17 +82,24 @@ jobs:
       configMode: 'manual'
       cliProjectKey: 'jfpanisset_openexr'
       cliProjectName: 'openexr'
+  - powershell: |  
+      [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+      Invoke-WebRequest -Uri http://sonarcloud.io/static/cpp/build-wrapper-win-x86.zip -OutFile build-wrapper-win.zip;       
+      Expand-Archive -Path .\build-wrapper-win.zip -DestinationPath ./ ;
+      Copy-Item .\build-wrapper-win-x86\build-wrapper-win-x86-64.exe ./ ;       
+    displayName: Download Sonar build wrapper
   - script: bootstrap-vcpkg.bat
     displayName: Bootstrap vcpkg
   - script: vcpkg.exe install zlib boost boost-python
-    displayName: vcpkg install dependencies
+    displayName: vcpkg install build dependencies
   - task: CMake@1
     inputs:
       workingDirectory: .
       cmakeArgs: . -G "Visual Studio 15 2017 Win64" -DCMAKE_TOOLCHAIN_FILE=C:\vcpkg\scripts\buildsystems\vcpkg.cmake
     displayName: Generate Visual Studio Solution with CMake on Windows
-  - task: MSBuild@1
-    inputs:
-      solution: '*.sln'
-    displayName: Build OpenEXR on Windows
-
+  - powershell: |
+      # Set Path to MSBuild
+      $env:Path += ";C:\Program Files (x86)\Microsoft Visual Studio\2017\Enterprise\MSBuild\15.0\Bin\amd64"
+      # Run build-wrapper
+      ./build-wrapper-win-x86-64.exe --out-dir ../bw-output MSBuild.exe /t:rebuild  /p:platform="x64" /p:configuration="Debug";
+    displayName: Build with Sonar build wrapper
