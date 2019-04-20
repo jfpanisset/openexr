@@ -21,6 +21,10 @@ jobs:
       configMode: 'manual'
       cliProjectKey: 'jfpanisset_openexr'
       cliProjectName: 'openexr'
+      extraProperties: |  
+        sonar.sourceEncoding=UTF-8        
+        sonar.cpp.std=c++14
+        sonar.cfamily.build-wrapper-output=bw-output 
   - bash: |
       curl -O https://sonarcloud.io/static/cpp/build-wrapper-linux-x86.zip
       unzip build-wrapper-linux-x86.zip
@@ -53,6 +57,10 @@ jobs:
       configMode: 'manual'
       cliProjectKey: 'jfpanisset_openexr'
       cliProjectName: 'openexr'
+      extraProperties: |  
+        sonar.sourceEncoding=UTF-8        
+        sonar.cpp.std=c++14
+        sonar.cfamily.build-wrapper-output=bw-output
   - bash: |
       curl -O https://sonarcloud.io/static/cpp/build-wrapper-macosx-x86.zip
       unzip build-wrapper-macosx-x86.zip
@@ -88,6 +96,10 @@ jobs:
       configMode: 'manual'
       cliProjectKey: 'jfpanisset_openexr'
       cliProjectName: 'openexr'
+      extraProperties: |  
+        sonar.sourceEncoding=UTF-8        
+        sonar.cpp.std=c++14
+        sonar.cfamily.build-wrapper-output=bw-output
   - powershell: |  
       [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
       Invoke-WebRequest -Uri http://sonarcloud.io/static/cpp/build-wrapper-win-x86.zip -OutFile build-wrapper-win.zip;       
