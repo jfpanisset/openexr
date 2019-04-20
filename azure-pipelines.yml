@@ -34,8 +34,9 @@ jobs:
       cmakeArgs: '-DCMAKE_INSTALL_PREFIX=/usr/local . -G "Unix Makefiles" -DCMAKE_PREFIX_PATH=/usr/local'
     displayName: Generate Makefiles with Cmake on Linux
   - bash: |
-      build-wrapper-linux-x86-64/build-wrapper-linux-x86-64 --out-dir bw-output make clean all
+      build-wrapper-linux-x86/build-wrapper-linux-x86-64 --out-dir bw-output make clean all
     displayName: Build OpenEXR on Linux with SonarCloud build wrapper
+    
 
 - job: macOS
   pool:
