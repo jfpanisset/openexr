@@ -50,7 +50,7 @@ jobs:
   - bash: |
       brew update
       brew install boost
-      brew brew install boost-python
+      brew install boost-python
     displayName: Install Boost and Boost.Python using Homebrew
   - task: CMake@1
     inputs:
