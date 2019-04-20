@@ -21,8 +21,12 @@ jobs:
       configMode: 'manual'
       cliProjectKey: 'jfpanisset_openexr'
       cliProjectName: 'openexr'
+  - bash: |
+      apt update && apt install libboost-all-dev libboost-python-dev
+    displayName: Install Boost and Boost.Python on Linux
   - task: CMake@1
     inputs:
+      workingDirectory: .
       cmakeArgs: '-DCMAKE_INSTALL_PREFIX=/usr/local . -G "Unix Makefiles" -DCMAKE_PREFIX_PATH=/usr/local'
     displayName: Generate Makefiles with Cmake on Linux
   - bash: |
@@ -42,8 +46,14 @@ jobs:
       configMode: 'manual'
       cliProjectKey: 'jfpanisset_openexr'
       cliProjectName: 'openexr'
+  - bash: |
+      brew update
+      brew install boost --with-python
+      brew brew install boost-python
+    displayName: Install Boost and Boost.Python using Homebrew
   - task: CMake@1
     inputs:
+      workingDirectory: .
       cmakeArgs: '-DCMAKE_INSTALL_PREFIX=/usr/local . -G "Unix Makefiles" -DCMAKE_PREFIX_PATH=/usr/local'
     displayName: Generate Makefiles with Cmake on macOS    
   - bash: |
@@ -65,6 +75,7 @@ jobs:
       cliProjectName: 'openexr'
   - task: CMake@1
     inputs:
+      workingDirectory: .
       cmakeArgs: . -G "Visual Studio 15 2017 Win64"
     displayName: Generate Visual Studio Solution with CMake on Windows
   - task: MSBuild@1
