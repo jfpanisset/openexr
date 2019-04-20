@@ -22,7 +22,7 @@ jobs:
       cliProjectKey: 'jfpanisset_openexr'
       cliProjectName: 'openexr'
   - bash: |
-      apt update && apt install libboost-all-dev libboost-python-dev
+      sudo apt update && sudo apt install libboost-all-dev libboost-python-dev
     displayName: Install Boost and Boost.Python on Linux
   - task: CMake@1
     inputs:
@@ -46,9 +46,10 @@ jobs:
       configMode: 'manual'
       cliProjectKey: 'jfpanisset_openexr'
       cliProjectName: 'openexr'
+  # FIXME: do we need --with-python for boost install?
   - bash: |
       brew update
-      brew install boost --with-python
+      brew install boost
       brew brew install boost-python
     displayName: Install Boost and Boost.Python using Homebrew
   - task: CMake@1
