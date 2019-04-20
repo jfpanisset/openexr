@@ -3,7 +3,6 @@
 # Add steps that publish test results, save build artifacts, deploy, and more:
 # https://docs.microsoft.com/azure/devops/pipelines/apps/c-cpp/gcc
 
-
 trigger:
 - master
 
@@ -13,18 +12,22 @@ jobs:
     vmImage: 'ubuntu-16.04'
   steps:
   - script: echo hello from Linux
+
   - task: SonarCloudPrepare@1
     inputs:
-      SonarCloud: 'fc625b8f-ccd1-4739-8296-af200d3aac70'
+      SonarCloud: '03db7951-faab-44df-a0dd-5bfcd6734227'
       organization: 'jfpanisset-github'
       scannerMode: 'CLI'
       configMode: 'manual'
       cliProjectKey: 'jfpanisset_openexr'
       cliProjectName: 'openexr'
+  - task: CMake@1
+    inputs:
+      cmakeArgs: '-DCMAKE_INSTALL_PREFIX=/usr/local . -G "Unix Makefiles" -DCMAKE_PREFIX_PATH=/usr/local'
+    displayName: Generate Makefiles with Cmake on Linux
   - bash: |
-      cmake -DCMAKE_INSTALL_PREFIX=/usr/local . -G "Unix Makefiles" -DCMAKE_PREFIX_PATH=/usr/local
       make
-    displayName: Run cmake and build OpenEXR on Linux
+    displayName: Build OpenEXR on Linux
 
 - job: macOS
   pool:
@@ -33,14 +36,17 @@ jobs:
   - script: echo hello from macOS
   - task: SonarCloudPrepare@1
     inputs:
-      SonarCloud: 'fc625b8f-ccd1-4739-8296-af200d3aac70'
+      SonarCloud: '03db7951-faab-44df-a0dd-5bfcd6734227'
       organization: 'jfpanisset-github'
       scannerMode: 'CLI'
       configMode: 'manual'
       cliProjectKey: 'jfpanisset_openexr'
       cliProjectName: 'openexr'
+  - task: CMake@1
+    inputs:
+      cmakeArgs: '-DCMAKE_INSTALL_PREFIX=/usr/local . -G "Unix Makefiles" -DCMAKE_PREFIX_PATH=/usr/local'
+    displayName: Generate Makefiles with Cmake on macOS    
   - bash: |
-      cmake -DCMAKE_INSTALL_PREFIX=/usr/local . -G "Unix Makefiles" -DCMAKE_PREFIX_PATH=/usr/local
       make
     displayName: Run cmake and build OpenEXR on macOS
    
@@ -51,16 +57,16 @@ jobs:
   - script: echo hello from Windows
   - task: SonarCloudPrepare@1
     inputs:
-      SonarCloud: 'fc625b8f-ccd1-4739-8296-af200d3aac70'
+      SonarCloud: '03db7951-faab-44df-a0dd-5bfcd6734227'
       organization: 'jfpanisset-github'
       scannerMode: 'CLI'
       configMode: 'manual'
       cliProjectKey: 'jfpanisset_openexr'
       cliProjectName: 'openexr'
-  - powershell: |
-      Remove-Item -Force -ErrorAction Ignore CMakeCache.txt
-      Start-Process -FilePath cmake -ArgumentList "-G `"Visual Studio 15 2017 Win64`""
-    displayName: Run cmake on Windows
+  - task: CMake@1
+    inputs:
+      cmakeArgs: . -G "Visual Studio 15 2017 Win64"
+    displayName: Generate Visual Studio Solution with CMake on Windows
   - task: MSBuild@1
     inputs:
       solution: '*.sln'
