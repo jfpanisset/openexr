@@ -62,6 +62,7 @@ jobs:
       Start-Process -FilePath cmake -ArgumentList "-G `"Visual Studio 15 2017 Win64`""
     displayName: Run cmake on Windows
   - task: MSBuild@1
-    solution: '*.sln'
+    inputs:
+      solution: '*.sln'
     displayName: Build OpenEXR on Windows
 
