@@ -36,7 +36,9 @@ jobs:
   - bash: |
       build-wrapper-linux-x86/build-wrapper-linux-x86-64 --out-dir bw-output make clean all
     displayName: Build OpenEXR on Linux with SonarCloud build wrapper
-    
+  - task: SonarCloudAnalyze@1
+    displayName: Run SonarCloud analysis
+    enabled: true
 
 - job: macOS
   pool:
@@ -69,6 +71,9 @@ jobs:
   - bash: |
       build-wrapper-macosx-x86/build-wrapper-macosx-x86 --out-dir bw-output make clean all
     displayName: Build OpenEXR on macOS with SonarCloud build wrapper
+  - task: SonarCloudAnalyze@1
+    displayName: Run SonarCloud analysis
+    enabled: true
    
 - job: Windows
   pool:
@@ -104,3 +109,6 @@ jobs:
       # Run build-wrapper
       ./build-wrapper-win-x86-64.exe --out-dir ../bw-output MSBuild.exe /t:rebuild  /p:platform="x64" /p:configuration="Debug";
     displayName: Build with Sonar build wrapper
+  - task: SonarCloudAnalyze@1
+    displayName: Run SonarCloud analysis
+    enabled: true
