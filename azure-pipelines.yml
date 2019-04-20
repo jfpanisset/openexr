@@ -30,8 +30,8 @@ jobs:
       cmakeArgs: '-DCMAKE_INSTALL_PREFIX=/usr/local . -G "Unix Makefiles" -DCMAKE_PREFIX_PATH=/usr/local'
     displayName: Generate Makefiles with Cmake on Linux
   - bash: |
-      make
-    displayName: Build OpenEXR on Linux
+      build-wrapper-linux-x86-64 --out-dir bw-output make clean all
+    displayName: Build OpenEXR on Linux with SonarCloud build wrapper
 
 - job: macOS
   pool:
@@ -58,8 +58,8 @@ jobs:
       cmakeArgs: '-DCMAKE_INSTALL_PREFIX=/usr/local . -G "Unix Makefiles" -DCMAKE_PREFIX_PATH=/usr/local'
     displayName: Generate Makefiles with Cmake on macOS    
   - bash: |
-      make
-    displayName: Run cmake and build OpenEXR on macOS
+      build-wrapper-macosx-x86 --out-dir bw-output make clean all
+    displayName: Build OpenEXR on macOS with SonarCloud build wrapper
    
 - job: Windows
   pool:
@@ -74,10 +74,14 @@ jobs:
       configMode: 'manual'
       cliProjectKey: 'jfpanisset_openexr'
       cliProjectName: 'openexr'
+  - script: bootstrap-vcpkg.bat
+    displayName: Bootstrap vcpkg
+  - script: vcpkg.exe install zlib boost boost-python
+    displayName: vcpkg install dependencies
   - task: CMake@1
     inputs:
       workingDirectory: .
-      cmakeArgs: . -G "Visual Studio 15 2017 Win64"
+      cmakeArgs: . -G "Visual Studio 15 2017 Win64" -DCMAKE_TOOLCHAIN_FILE=C:\vcpkg\scripts\buildsystems\vcpkg.cmake
     displayName: Generate Visual Studio Solution with CMake on Windows
   - task: MSBuild@1
     inputs:
