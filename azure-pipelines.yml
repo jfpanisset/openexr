@@ -30,8 +30,11 @@ jobs:
       unzip build-wrapper-linux-x86.zip
     displayName: Download Sonar build wrapper
   - bash: |
-      sudo apt update && sudo apt install libboost-all-dev libboost-python-dev
-    displayName: Install Boost and Boost.Python on Linux
+      echo "##vso[task.prependpath]$CONDA/bin"
+    displayName: Add Conda to PATH
+  - bash: |
+      conda create --yes --quiet --name myOpenEXRenv python=2.7.15 boost=1.66.0 zlib=1.2.11 numpy=1.14
+    displayName: Create Conda environment
   - task: CMake@1
     inputs:
       workingDirectory: .
@@ -65,12 +68,15 @@ jobs:
       curl -O https://sonarcloud.io/static/cpp/build-wrapper-macosx-x86.zip
       unzip build-wrapper-macosx-x86.zip
     displayName: Download Sonar build wrapper
-  # FIXME: do we need --with-python for boost install?
   - bash: |
-      brew update
-      brew install boost
-      brew install boost-python
-    displayName: Install Boost and Boost.Python using Homebrew
+      echo "##vso[task.prependpath]$CONDA/bin"
+      # On Hosted macOS, the agent user doesn't have ownership of Miniconda's installation directory/
+      # We need to take ownership if we want to update conda or install packages globally
+      sudo chown -R $USER $CONDA
+    displayName: Add Conda to PATH
+  - bash: |
+      conda create --yes --quiet --name myOpenEXRenv python=2.7.15 boost=1.66.0 zlib=1.2.11 numpy=1.14
+    displayName: Create Conda environment
   - task: CMake@1
     inputs:
       workingDirectory: .
@@ -106,10 +112,12 @@ jobs:
       Expand-Archive -Path .\build-wrapper-win.zip -DestinationPath ./ ;
       Copy-Item .\build-wrapper-win-x86\build-wrapper-win-x86-64.exe ./ ;       
     displayName: Download Sonar build wrapper
-  - script: bootstrap-vcpkg.bat
-    displayName: Bootstrap vcpkg
-  - script: vcpkg.exe install zlib boost boost-python
-    displayName: vcpkg install build dependencies
+  - powershell: |
+      Write-Host "##vso[task.prependpath]$env:CONDA\Scripts"
+    displayName: Add Conda to PATH
+  - script: |
+      conda create --yes --quiet --name myOpenEXRenv python=2.7.15 boost=1.66.0 zlib=1.2.11 numpy=1.14
+    displayName: Create Conda environment
   - task: CMake@1
     inputs:
       workingDirectory: .
