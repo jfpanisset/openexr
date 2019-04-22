@@ -125,11 +125,10 @@ jobs:
       # related to find_package(PythonLibs) being obsolete is newer cmake versions.
       cmake -DCMAKE_PREFIX_PATH=%CONDA_PREFIX% -DCMAKE_INSTALL_PREFIX=%CONDA_PREFIX% -DPYTHON_INCLUDE_DIR=%CONDA_PREFIX%\include -DPYTHON_LIBRARY=%CONDA_PREFIX%\libs -G "Visual Studio 15 2017 Win64" .
     displayName: Generate Visual Studio Solution with CMake on Windows
-  - powershell: |
-      # Set Path to MSBuild
-      $env:Path += ";C:\Program Files (x86)\Microsoft Visual Studio\2017\Enterprise\MSBuild\15.0\Bin\amd64"
-      # Run build-wrapper
-      ./build-wrapper-win-x86-64.exe --out-dir ../bw-output MSBuild.exe /t:rebuild  /p:platform="x64" /p:configuration="Debug" OpenEXR.sln
+  - script: |
+      call activate myOpenEXRenv
+      # SonarCloud build wrapper
+      ./build-wrapper-win-x86-64.exe --out-dir ../bw-output cmake --build . --config Release
     displayName: Build with Sonar build wrapper
   - task: SonarCloudAnalyze@1
     displayName: Run SonarCloud analysis
