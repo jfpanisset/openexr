@@ -68,10 +68,10 @@ jobs:
       curl -O https://sonarcloud.io/static/cpp/build-wrapper-macosx-x86.zip
       unzip build-wrapper-macosx-x86.zip
     displayName: Download Sonar build wrapper
+  # On Hosted macOS, the agent user doesn't have ownership of Miniconda's installation directory
+  # We need to take ownership if we want to update conda or install packages globally
   - bash: |
       echo "##vso[task.prependpath]$CONDA/bin"
-      # On Hosted macOS, the agent user doesn't have ownership of Miniconda's installation directory/
-      # We need to take ownership if we want to update conda or install packages globally
       sudo chown -R $USER $CONDA
     displayName: Add Conda to PATH
   - bash: |
@@ -119,15 +119,14 @@ jobs:
       conda config --add channels conda-forge
       conda create --yes --quiet --name myOpenEXRenv python=2.7.15 boost=1.66.0 zlib=1.2.11 numpy=1.14
     displayName: Create Conda environment
+  # On Windows cmake doesn't seem to find Python 2.7 libraries unless we tell it explicitly, may be
+  # related to find_package(PythonLibs) being obsolete is newer cmake versions.
   - script: |
       call activate myOpenEXRenv
-      # On Windows cmake doesn't seem to find Python 2.7 libraries unless we tell it explicitly, may be
-      # related to find_package(PythonLibs) being obsolete is newer cmake versions.
       cmake -DCMAKE_PREFIX_PATH=%CONDA_PREFIX% -DCMAKE_INSTALL_PREFIX=%CONDA_PREFIX% -DPYTHON_INCLUDE_DIR=%CONDA_PREFIX%\include -DPYTHON_LIBRARY=%CONDA_PREFIX%\libs -G "Visual Studio 15 2017 Win64" .
     displayName: Generate Visual Studio Solution with CMake on Windows
   - script: |
       call activate myOpenEXRenv
-      # SonarCloud build wrapper
       ./build-wrapper-win-x86-64.exe --out-dir ../bw-output cmake --build . --config Release
     displayName: Build with Sonar build wrapper
   - task: SonarCloudAnalyze@1
