@@ -33,6 +33,7 @@ jobs:
       echo "##vso[task.prependpath]$CONDA/bin"
     displayName: Add Conda to PATH
   - bash: |
+      conda config --add channels conda-forge
       conda create --yes --quiet --name myOpenEXRenv python=2.7.15 boost=1.66.0 zlib=1.2.11 numpy=1.14
     displayName: Create Conda environment
   - task: CMake@1
@@ -75,6 +76,7 @@ jobs:
       sudo chown -R $USER $CONDA
     displayName: Add Conda to PATH
   - bash: |
+      conda config --add channels conda-forge
       conda create --yes --quiet --name myOpenEXRenv python=2.7.15 boost=1.66.0 zlib=1.2.11 numpy=1.14
     displayName: Create Conda environment
   - task: CMake@1
@@ -116,6 +118,7 @@ jobs:
       Write-Host "##vso[task.prependpath]$env:CONDA\Scripts"
     displayName: Add Conda to PATH
   - script: |
+      conda config --add channels conda-forge
       conda create --yes --quiet --name myOpenEXRenv python=2.7.15 boost=1.66.0 zlib=1.2.11 numpy=1.14
     displayName: Create Conda environment
   - task: CMake@1
