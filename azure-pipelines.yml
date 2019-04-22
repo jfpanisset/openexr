@@ -37,7 +37,7 @@ jobs:
       conda create --yes --quiet --name myOpenEXRenv python=2.7.15 boost=1.66.0 zlib=1.2.11 numpy=1.14
     displayName: Create Conda environment
   - bash: |
-      conda activate myOpenEXRenv
+      source activate myOpenEXRenv
       cmake -DCMAKE_PREFIX_PATH=$CONDA_PREFIX -DCMAKE_INSTALL_PREFIX=$CONDA_PREFIX -G "Unix Makefiles" .
     displayName: Generate Makefiles with Cmake on Linux
   - bash: |
@@ -79,7 +79,7 @@ jobs:
       conda create --yes --quiet --name myOpenEXRenv python=2.7.15 boost=1.66.0 zlib=1.2.11 numpy=1.14
     displayName: Create Conda environment
   - bash: |
-      conda activate myOpenEXRenv
+      source activate myOpenEXRenv
       cmake -DCMAKE_PREFIX_PATH=$CONDA_PREFIX -DCMAKE_INSTALL_PREFIX=$CONDA_PREFIX -G "Unix Makefiles" .
     displayName: Generate Makefiles with Cmake on macOS
   - bash: |
@@ -120,7 +120,7 @@ jobs:
       conda create --yes --quiet --name myOpenEXRenv python=2.7.15 boost=1.66.0 zlib=1.2.11 numpy=1.14
     displayName: Create Conda environment
   - script: |
-      conda activate myOpenEXRenv
+      call activate myOpenEXRenv
       cmake -DCMAKE_PREFIX_PATH=%CONDA_PREFIX% -DCMAKE_INSTALL_PREFIX=%CONDA_PREFIX% -G "Visual Studio 15 2017 Win64" .
     displayName: Generate Visual Studio Solution with CMake on Windows
   - powershell: |
