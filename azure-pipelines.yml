@@ -127,7 +127,7 @@ jobs:
     displayName: Generate Visual Studio Solution with CMake on Windows
   - script: |
       call activate myOpenEXRenv
-      ./build-wrapper-win-x86-64.exe --out-dir ../bw-output cmake --build . --config Release
+      build-wrapper-win-x86-64.exe --out-dir bw-output cmake --build . --config Release
     displayName: Build with Sonar build wrapper
   - task: SonarCloudAnalyze@1
     displayName: Run SonarCloud analysis
