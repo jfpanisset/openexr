@@ -38,7 +38,7 @@ jobs:
     displayName: Create Conda environment
   - bash: |
       conda activate myOpenEXRenv
-      cmake -DCMAKE_PREFIX_PATH=$CONDA_PREFIX -DCMAKE_INSTALL_PREFIX=$CONDA_PREFIX -G "Unix Makesfiles" .
+      cmake -DCMAKE_PREFIX_PATH=$CONDA_PREFIX -DCMAKE_INSTALL_PREFIX=$CONDA_PREFIX -G "Unix Makefiles" .
     displayName: Generate Makefiles with Cmake on Linux
   - bash: |
       build-wrapper-linux-x86/build-wrapper-linux-x86-64 --out-dir bw-output make clean all
@@ -80,7 +80,7 @@ jobs:
     displayName: Create Conda environment
   - bash: |
       conda activate myOpenEXRenv
-      cmake -DCMAKE_PREFIX_PATH=$CONDA_PREFIX -DCMAKE_INSTALL_PREFIX=$CONDA_PREFIX -G "Unix Makesfiles" .
+      cmake -DCMAKE_PREFIX_PATH=$CONDA_PREFIX -DCMAKE_INSTALL_PREFIX=$CONDA_PREFIX -G "Unix Makefiles" .
     displayName: Generate Makefiles with Cmake on macOS
   - bash: |
       build-wrapper-macosx-x86/build-wrapper-macosx-x86 --out-dir bw-output make clean all
