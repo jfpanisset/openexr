@@ -36,10 +36,9 @@ jobs:
       conda config --add channels conda-forge
       conda create --yes --quiet --name myOpenEXRenv python=2.7.15 boost=1.66.0 zlib=1.2.11 numpy=1.14
     displayName: Create Conda environment
-  - task: CMake@1
-    inputs:
-      workingDirectory: .
-      cmakeArgs: '-DCMAKE_INSTALL_PREFIX=/usr/local . -G "Unix Makefiles" -DCMAKE_PREFIX_PATH=/usr/local'
+  - bash: |
+      conda activate myOpenEXRenv
+      cmake -DCMAKE_PREFIX_PATH=$CONDA_PREFIX -DCMAKE_INSTALL_PREFIX=$CONDA_PREFIX -G "Unix Makesfiles" .
     displayName: Generate Makefiles with Cmake on Linux
   - bash: |
       build-wrapper-linux-x86/build-wrapper-linux-x86-64 --out-dir bw-output make clean all
@@ -79,11 +78,10 @@ jobs:
       conda config --add channels conda-forge
       conda create --yes --quiet --name myOpenEXRenv python=2.7.15 boost=1.66.0 zlib=1.2.11 numpy=1.14
     displayName: Create Conda environment
-  - task: CMake@1
-    inputs:
-      workingDirectory: .
-      cmakeArgs: '-DCMAKE_INSTALL_PREFIX=/usr/local . -G "Unix Makefiles" -DCMAKE_PREFIX_PATH=/usr/local'
-    displayName: Generate Makefiles with Cmake on macOS    
+  - bash: |
+      conda activate myOpenEXRenv
+      cmake -DCMAKE_PREFIX_PATH=$CONDA_PREFIX -DCMAKE_INSTALL_PREFIX=$CONDA_PREFIX -G "Unix Makesfiles" .
+    displayName: Generate Makefiles with Cmake on macOS
   - bash: |
       build-wrapper-macosx-x86/build-wrapper-macosx-x86 --out-dir bw-output make clean all
     displayName: Build OpenEXR on macOS with SonarCloud build wrapper
@@ -121,10 +119,9 @@ jobs:
       conda config --add channels conda-forge
       conda create --yes --quiet --name myOpenEXRenv python=2.7.15 boost=1.66.0 zlib=1.2.11 numpy=1.14
     displayName: Create Conda environment
-  - task: CMake@1
-    inputs:
-      workingDirectory: .
-      cmakeArgs: . -G "Visual Studio 15 2017 Win64" -DCMAKE_TOOLCHAIN_FILE=C:\vcpkg\scripts\buildsystems\vcpkg.cmake
+  - script: |
+      conda activate myOpenEXRenv
+      cmake -DCMAKE_PREFIX_PATH=%CONDA_PREFIX% -DCMAKE_INSTALL_PREFIX=%CONDA_PREFIX% -G "Visual Studio 15 2017 Win64" .
     displayName: Generate Visual Studio Solution with CMake on Windows
   - powershell: |
       # Set Path to MSBuild
