@@ -38,9 +38,12 @@ jobs:
     displayName: Create Conda environment
   - bash: |
       source activate myOpenEXRenv
-      cmake -DCMAKE_PREFIX_PATH=$CONDA_PREFIX -DCMAKE_INSTALL_PREFIX=$CONDA_PREFIX -G "Unix Makefiles" .
+      mkdir build
+      cd build
+      cmake -DCMAKE_PREFIX_PATH=$CONDA_PREFIX -DCMAKE_INSTALL_PREFIX=$CONDA_PREFIX -G "Unix Makefiles" ..
     displayName: Generate Makefiles with Cmake on Linux
   - bash: |
+      cd build
       build-wrapper-linux-x86/build-wrapper-linux-x86-64 --out-dir bw-output cmake --build . --config Release
     displayName: Build OpenEXR on Linux with SonarCloud build wrapper
   - task: SonarCloudAnalyze@1
@@ -65,6 +68,8 @@ jobs:
         sonar.cpp.std=c++14
         sonar.cfamily.build-wrapper-output=bw-output
   - bash: |
+      mkdir build
+      cd build
       curl -O https://sonarcloud.io/static/cpp/build-wrapper-macosx-x86.zip
       unzip build-wrapper-macosx-x86.zip
     displayName: Download Sonar build wrapper
@@ -80,9 +85,11 @@ jobs:
     displayName: Create Conda environment
   - bash: |
       source activate myOpenEXRenv
-      cmake -DCMAKE_PREFIX_PATH=$CONDA_PREFIX -DCMAKE_INSTALL_PREFIX=$CONDA_PREFIX -G "Unix Makefiles" .
+      cd build
+      cmake -DCMAKE_PREFIX_PATH=$CONDA_PREFIX -DCMAKE_INSTALL_PREFIX=$CONDA_PREFIX -G "Unix Makefiles" ..
     displayName: Generate Makefiles with Cmake on macOS
   - bash: |
+      cd build
       build-wrapper-macosx-x86/build-wrapper-macosx-x86 --out-dir bw-output cmake --build . --config Release
     displayName: Build OpenEXR on macOS with SonarCloud build wrapper
   - task: SonarCloudAnalyze@1
@@ -106,7 +113,9 @@ jobs:
         sonar.sourceEncoding=UTF-8        
         sonar.cpp.std=c++14
         sonar.cfamily.build-wrapper-output=bw-output
-  - powershell: |  
+  - powershell: |
+      New-Item -Path "," -Name "build" -ItemType "directory"
+      Set-Location -Path "build"
       [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
       Invoke-WebRequest -Uri http://sonarcloud.io/static/cpp/build-wrapper-win-x86.zip -OutFile build-wrapper-win.zip;       
       Expand-Archive -Path .\build-wrapper-win.zip -DestinationPath ./ ;
@@ -126,7 +135,7 @@ jobs:
   - script: |
       call activate myOpenEXRenv
       set BOOST_ROOT=
-      cmake -DCMAKE_PREFIX_PATH=%CONDA_PREFIX% -DCMAKE_INSTALL_PREFIX=%CONDA_PREFIX% -DPYTHON_INCLUDE_DIR=%CONDA_PREFIX%\include -DPYTHON_LIBRARY=%CONDA_PREFIX%\libs\python27.lib -G "Visual Studio 15 2017 Win64" .
+      cmake -DCMAKE_PREFIX_PATH=%CONDA_PREFIX% -DCMAKE_INSTALL_PREFIX=%CONDA_PREFIX% -DPYTHON_INCLUDE_DIR=%CONDA_PREFIX%\include -DPYTHON_LIBRARY=%CONDA_PREFIX%\libs\python27.lib -DBOOST_PYTHON_STATIC_LIB -G "Visual Studio 15 2017 Win64" .
     displayName: Generate Visual Studio Solution with CMake on Windows
   - script: |
       call activate myOpenEXRenv
