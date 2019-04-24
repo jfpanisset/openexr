@@ -121,8 +121,11 @@ jobs:
     displayName: Create Conda environment
   # On Windows cmake doesn't seem to find Python 2.7 libraries unless we tell it explicitly, may be
   # related to find_package(PythonLibs) being obsolete is newer cmake versions.
+  # As of CMake 3.12 policy CMP0074 will cause CMake to look for Boost in BOOST_ROOT, which is defined
+  # on the Windows build agents, we don't want that.
   - script: |
       call activate myOpenEXRenv
+      setx BOOST_ROOT ""
       cmake -DCMAKE_PREFIX_PATH=%CONDA_PREFIX% -DCMAKE_INSTALL_PREFIX=%CONDA_PREFIX% -DPYTHON_INCLUDE_DIR=%CONDA_PREFIX%\include -DPYTHON_LIBRARY=%CONDA_PREFIX%\libs\python27.lib -G "Visual Studio 15 2017 Win64" .
     displayName: Generate Visual Studio Solution with CMake on Windows
   - script: |
