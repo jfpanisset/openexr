@@ -41,7 +41,7 @@ jobs:
       cmake -DCMAKE_PREFIX_PATH=$CONDA_PREFIX -DCMAKE_INSTALL_PREFIX=$CONDA_PREFIX -G "Unix Makefiles" .
     displayName: Generate Makefiles with Cmake on Linux
   - bash: |
-      build-wrapper-linux-x86/build-wrapper-linux-x86-64 --out-dir bw-output make clean all
+      build-wrapper-linux-x86/build-wrapper-linux-x86-64 --out-dir bw-output cmake --build . --config Release
     displayName: Build OpenEXR on Linux with SonarCloud build wrapper
   - task: SonarCloudAnalyze@1
     displayName: Run SonarCloud analysis
@@ -83,7 +83,7 @@ jobs:
       cmake -DCMAKE_PREFIX_PATH=$CONDA_PREFIX -DCMAKE_INSTALL_PREFIX=$CONDA_PREFIX -G "Unix Makefiles" .
     displayName: Generate Makefiles with Cmake on macOS
   - bash: |
-      build-wrapper-macosx-x86/build-wrapper-macosx-x86 --out-dir bw-output make clean all
+      build-wrapper-macosx-x86/build-wrapper-macosx-x86 --out-dir bw-output cmake --build . --config Release
     displayName: Build OpenEXR on macOS with SonarCloud build wrapper
   - task: SonarCloudAnalyze@1
     displayName: Run SonarCloud analysis
