@@ -137,7 +137,7 @@ jobs:
   - script: |
       call activate myOpenEXRenv
       set BOOST_ROOT=
-      cmake -DCMAKE_PREFIX_PATH=%CONDA_PREFIX% -DCMAKE_INSTALL_PREFIX=%CONDA_PREFIX% -DPYTHON_INCLUDE_DIR=%CONDA_PREFIX%\include -DPYTHON_LIBRARY=%CONDA_PREFIX%\libs\python27.lib -DBOOST_PYTHON_STATIC_LIB -G "Visual Studio 15 2017 Win64" .
+      cmake -DCMAKE_PREFIX_PATH=%CONDA_PREFIX% -DCMAKE_INSTALL_PREFIX=%CONDA_PREFIX% -DPYTHON_INCLUDE_DIR=%CONDA_PREFIX%\include -DPYTHON_LIBRARY=%CONDA_PREFIX%\libs\python27.lib -G "Visual Studio 15 2017 Win64" .
     displayName: Generate Visual Studio Solution with CMake on Windows
   - script: |
       call activate myOpenEXRenv
