@@ -24,7 +24,7 @@ jobs:
       extraProperties: |  
         sonar.sourceEncoding=UTF-8        
         sonar.cpp.std=c++14
-        sonar.cfamily.build-wrapper-output=bw-output 
+        sonar.cfamily.build-wrapper-output=build/bw-output 
   - bash: |
       mkdir build
       cd build
@@ -68,7 +68,7 @@ jobs:
       extraProperties: |  
         sonar.sourceEncoding=UTF-8        
         sonar.cpp.std=c++14
-        sonar.cfamily.build-wrapper-output=bw-output
+        sonar.cfamily.build-wrapper-output=build/bw-output
   - bash: |
       mkdir build
       cd build
@@ -115,7 +115,7 @@ jobs:
       extraProperties: |  
         sonar.sourceEncoding=UTF-8        
         sonar.cpp.std=c++14
-        sonar.cfamily.build-wrapper-output=bw-output
+        sonar.cfamily.build-wrapper-output=build\bw-output
   - powershell: |
       New-Item -Path "." -Name "build" -ItemType "directory"
       Set-Location -Path "build"
@@ -137,10 +137,12 @@ jobs:
   - script: |
       call activate myOpenEXRenv
       set BOOST_ROOT=
-      cmake -DCMAKE_PREFIX_PATH=%CONDA_PREFIX% -DCMAKE_INSTALL_PREFIX=%CONDA_PREFIX% -DPYTHON_INCLUDE_DIR=%CONDA_PREFIX%\include -DPYTHON_LIBRARY=%CONDA_PREFIX%\libs\python27.lib -G "Visual Studio 15 2017 Win64" .
+      cd build
+      cmake -DCMAKE_PREFIX_PATH=%CONDA_PREFIX% -DCMAKE_INSTALL_PREFIX=%CONDA_PREFIX% -DPYTHON_INCLUDE_DIR=%CONDA_PREFIX%\include -DPYTHON_LIBRARY=%CONDA_PREFIX%\libs\python27.lib -G "Visual Studio 15 2017 Win64" ..
     displayName: Generate Visual Studio Solution with CMake on Windows
   - script: |
       call activate myOpenEXRenv
+      cd build
       build-wrapper-win-x86\build-wrapper-win-x86-64.exe --out-dir bw-output cmake --build . --config Release
     displayName: Build with Sonar build wrapper
   - task: SonarCloudAnalyze@1
