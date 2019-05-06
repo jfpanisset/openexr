@@ -36,7 +36,7 @@ jobs:
     displayName: Add Conda to PATH
   - bash: |
       conda config --add channels conda-forge
-      conda create --yes --quiet --name myOpenEXRenv python=2.7.15 boost=1.69 zlib=1.2.11 numpy=1.16 cmake=3.14
+      conda create --yes --quiet --name myOpenEXRenv python=2.7.15 boost=1.70 zlib=1.2.11 numpy=1.16 cmake=3.14
     displayName: Create Conda environment
   - bash: |
       source activate myOpenEXRenv
@@ -83,7 +83,7 @@ jobs:
     displayName: Add Conda to PATH
   - bash: |
       conda config --add channels conda-forge
-      conda create --yes --quiet --name myOpenEXRenv python=2.7.15 boost=1.69 zlib=1.2.11 numpy=1.16 cmake=3.14
+      conda create --yes --quiet --name myOpenEXRenv python=2.7.15 boost=1.70 zlib=1.2.11 numpy=1.16 cmake=3.14
     displayName: Create Conda environment
   - bash: |
       source activate myOpenEXRenv
@@ -128,7 +128,7 @@ jobs:
     displayName: Add Conda to PATH
   - script: |
       conda config --add channels conda-forge
-      conda create --yes --quiet --name myOpenEXRenv python=2.7.15 boost=1.69 zlib=1.2.11 numpy=1.16 cmake=3.14
+      conda create --yes --quiet --name myOpenEXRenv python=2.7.15 boost=1.70 zlib=1.2.11 numpy=1.16 cmake=3.14
     displayName: Create Conda environment
   # On Windows cmake doesn't seem to find Python 2.7 libraries unless we tell it explicitly, may be
   # related to find_package(PythonLibs) being obsolete is newer cmake versions.
