@@ -41,7 +41,7 @@ jobs:
   - bash: |
       source activate myOpenEXRenv
       cd build
-      cmake -DCMAKE_PREFIX_PATH=$CONDA_PREFIX -DCMAKE_INSTALL_PREFIX=$CONDA_PREFIX -G "Unix Makefiles" ..
+      cmake -DBoost_NO_BOOST_CMAKE=ON -DCMAKE_PREFIX_PATH=$CONDA_PREFIX -DCMAKE_INSTALL_PREFIX=$CONDA_PREFIX -G "Unix Makefiles" ..
     displayName: Generate Makefiles with Cmake on Linux
   - bash: |
       source activate myOpenEXRenv
@@ -88,7 +88,7 @@ jobs:
   - bash: |
       source activate myOpenEXRenv
       cd build
-      cmake -DCMAKE_PREFIX_PATH=$CONDA_PREFIX -DCMAKE_INSTALL_PREFIX=$CONDA_PREFIX -G "Unix Makefiles" ..
+      cmake -DBoost_NO_BOOST_CMAKE=ON -DCMAKE_PREFIX_PATH=$CONDA_PREFIX -DCMAKE_INSTALL_PREFIX=$CONDA_PREFIX -G "Unix Makefiles" ..
     displayName: Generate Makefiles with Cmake on macOS
   - bash: |
       source activate myOpenEXRenv
@@ -138,7 +138,7 @@ jobs:
       call activate myOpenEXRenv
       set BOOST_ROOT=
       cd build
-      cmake -DCMAKE_PREFIX_PATH=%CONDA_PREFIX% -DCMAKE_INSTALL_PREFIX=%CONDA_PREFIX% -DPYTHON_INCLUDE_DIR=%CONDA_PREFIX%\include -DPYTHON_LIBRARY=%CONDA_PREFIX%\libs\python27.lib -G "Visual Studio 15 2017 Win64" ..
+      cmake -DBoost_NO_BOOST_CMAKE=ON -DCMAKE_PREFIX_PATH=%CONDA_PREFIX% -DCMAKE_INSTALL_PREFIX=%CONDA_PREFIX% -DPYTHON_INCLUDE_DIR=%CONDA_PREFIX%\include -DPYTHON_LIBRARY=%CONDA_PREFIX%\libs\python27.lib -G "Visual Studio 15 2017 Win64" ..
     displayName: Generate Visual Studio Solution with CMake on Windows
   - script: |
       call activate myOpenEXRenv
